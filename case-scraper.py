@@ -28,18 +28,19 @@ for table in doc.tables:
         for cell in row.cells:
             cell_texts = extract_cell_text(cell)
             for text in cell_texts:
-                text = text.split(': ', 1)[-1] if ': ' in text else text
-                if "represented by" in text:
+                cleaned_text = text.split(': ', 1)[-1] if ': ' in text else text
+                if "represented by" in cleaned_text:
                     continue
-                elif "Phone:" in text:
-                    row_data[2] = text.replace("Phone:", "").strip()
-                elif "Fax:" in text:
-                    row_data[3] = text.replace("Fax:", "").strip()
+                elif "Phone:" in cleaned_text:
+                    row_data[2] = cleaned_text.replace("Phone:", "").strip()
+                elif "Fax:" in cleaned_text:
+                    row_data[3] = cleaned_text.replace("Fax:", "").strip()
                 elif "Email:" in text:
-                    row_data[4] = text.replace("Email:", "").strip()
+                    row_data[4] = cleaned_text.replace("Email:", "").strip()
                 else:
                     if not row_data[0]:
-                        row_data[0] = text
+                        # We only need to log if it's a plaintiff or defendant or whatever, not the actual name
+                        row_data[0] = text.split(': ', 1)[0] if ':' in text else text
                     else:
                         row_data[1] = text
         
